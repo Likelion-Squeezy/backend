@@ -1,9 +1,16 @@
 # Setting
-클론 후, 패키지 설치     
-<code>npm i</code>    
+가상환경 생성 후, 활성화 (리눅스 환경)       
+<code>python3 -m venv .venv</code>    
+<code>source .venv/bin/activate</code>    
 
-dist 폴더 생성    
-<code>npm run build</code>
+ 라이브러리 설치       
+<code>pip3 install -r requirements.txt</code>
+
+db 마이그레이션      
+<code>python manage.py migrate</code>
+
+django 서버 실행      
+<code>python manage.py runserver</code>
 
 
 # Commit Convention
