@@ -7,10 +7,10 @@
 <code>pip3 install -r requirements.txt</code>
 
 db 마이그레이션      
-<code>python manage.py migrate</code>
+<code>python3 manage.py migrate</code>
 
 django 서버 실행      
-<code>python manage.py runserver</code>
+<code>python3 manage.py runserver</code>
 
 
 # Commit Convention
