@@ -42,18 +42,3 @@ The login feature is a core functionality of the application that allows users t
 ...
 
 # Directory
-public     
- ┣ icons     
- ┣ background.js // jsx 파일과 요청을 주고 받는 파일     
- ┣ manifest.json     
- ┗ vite.svg     
- src     
- ┣ assets     
- ┣ components     
- ┃ ┗ TabList.jsx // 현재 열려있는 탭 목록     
- ┣ App.css     
- ┣ App.jsx // 확장 프로그램 사이드 패널     
- ┣ index.css     
- ┣ main.jsx     
- ┣ popup.jsx     
- ┗ Preview.jsx // 확장 프로그램 팝업 창     
