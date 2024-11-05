@@ -1,9 +1,10 @@
 from django.db import models
 
 # Create your models here.
-class Tab(models.Model):
+class Eezy(models.Model):
     title = models.CharField(max_length=100)
-    url = models.URLField()
+    content = models.TextField()
+    tab = models.ForeignKey('tabs.Tab', on_delete=models.CASCADE)
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     
     def __str__(self):
