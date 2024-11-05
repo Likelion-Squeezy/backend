@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tabs.apps.TabsConfig',
-    'categories.apps.CategoriesConfig',
     'users.apps.UsersConfig',
+    'tabs.apps.TabsConfig',
+    'squeeze.apps.SqueezeConfig',
+    'eezy.apps.EezyConfig',
     'rest_framework'
 ]
 

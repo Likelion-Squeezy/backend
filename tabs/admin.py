@@ -4,4 +4,4 @@ from .models import Tab
 # Register your models here.
 @admin.register(Tab)
 class TabAdmin(admin.ModelAdmin):
-    list_display = ('title', 'url', 'content', 'category')
+    list_display = ['title', 'url', 'user']
