@@ -40,7 +40,7 @@ class EezyView(APIView):
             return Response({"error": f"Input length exceeds {max_input_length} characters"}, status=status.HTTP_400_BAD_REQUEST)   
 
         try:
-            response = client.chat.completions.create(
+            '''response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
@@ -54,7 +54,8 @@ class EezyView(APIView):
                 max_tokens=700
             )
             result = response.choices[0].message.content.strip()
-            result_json = json.loads(result)
+            result_json = json.loads(result)'''
+            result_json = {"title": "test", "content": html_content, "tab":tab}
             eezy = Eezy.objects.create(title=result_json['title'], content=result_json['content'], tab=tab)
             serializer = EezySerializer(eezy)
             return Response(serializer.data, status=status.HTTP_200_OK)
