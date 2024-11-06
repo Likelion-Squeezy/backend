@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,6 +55,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "chrome-extension://oamcggejfblocnjfhjboglmobhejhane",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    # 필요한 다른 도메인 추가
 ]
 
 ROOT_URLCONF = 'config.urls'
