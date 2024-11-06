@@ -5,7 +5,6 @@ class Eezy(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     tab = models.ForeignKey('tabs.Tab', on_delete=models.CASCADE, related_name='eezy')
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
