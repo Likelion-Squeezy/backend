@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'eezy.apps.EezyConfig',
     'rest_framework',
     'corsheaders',
+    'rest_framework.authtoken',  # Add this line
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     # 필요한 다른 도메인 추가
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'chrome-extension://oamcggejfblocnjfhjboglmobhejhane'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -139,3 +144,9 @@ STATICFILES_DIRS = []
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

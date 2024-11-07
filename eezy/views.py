@@ -40,23 +40,27 @@ class EezyView(APIView):
             return Response({"error": f"Input length exceeds {max_input_length} characters"}, status=status.HTTP_400_BAD_REQUEST)   
 
         try:
-            '''response = client.chat.completions.create(
+            response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": (
                         "다음 HTML 콘텐츠의 제목을 추출하고 요약해 주세요. "
                         "요약본은 노션에 적합한 마크다운 형식으로 작성해 주세요. "
-                        "결과는 'title'과 'content' 필드를 포함하는 JSON 객체로 반환해 주세요:\n\n"
+                        "결과는 'content' 필드를 포함하는 JSON 객체로 반환해 주세요:\n\n"
                         f"{html_content}\n\n"
                     )}
                 ],
                 max_tokens=700
             )
             result = response.choices[0].message.content.strip()
-            result_json = json.loads(result)'''
-            result_json = {"title": "test", "content": html_content, "tab":tab}
-            eezy = Eezy.objects.create(title=result_json['title'], content=result_json['content'], tab=tab)
+
+            if result.startswith("```json"):
+                result = result[7:-3].strip()
+            print(response.choices[0])
+            result_json = json.loads(result)
+            '''result_json = {"title": "test", "content": html_content, "tab":tab}'''
+            eezy = Eezy.objects.create(title=tab.title, content=result_json['content'], tab=tab)
             serializer = EezySerializer(eezy)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
