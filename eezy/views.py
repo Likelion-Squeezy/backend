@@ -22,7 +22,7 @@ client = openai.OpenAI(api_key=openai.api_key)
 class EezyView(APIView):
 
     def post(self, request):
-        test_user = User.objects.get(username='mongsam2')
+        user = request.user
         tab_serializer = TabSerializer(data=request.data)
         html_content = request.data.get('script')
         if not html_content:
@@ -30,7 +30,7 @@ class EezyView(APIView):
         
         # tab 인스턴스 생성
         if tab_serializer.is_valid():
-            tab = tab_serializer.save(user=test_user)
+            tab = tab_serializer.save(user=user)
         else:
             return Response(tab_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -43,11 +43,11 @@ class EezyView(APIView):
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "system", "content": "너는 웹 페이지의 내용을 노션 페이지에 정리하기 좋은 markdown으로 요약해주는 역할이야."},
                     {"role": "user", "content": (
-                        "다음 HTML 콘텐츠의 제목을 추출하고 요약해 주세요. "
+                        "다음 HTML 콘텐츠를 요약해 주세요. "
                         "요약본은 노션에 적합한 마크다운 형식으로 작성해 주세요. "
-                        "결과는 'content' 필드를 포함하는 JSON 객체로 반환해 주세요:\n\n"
+                        "결과는 마크다운 형식의 문자열로 반환해 주세요:\n\n"
                         f"{html_content}\n\n"
                     )}
                 ],
@@ -55,12 +55,8 @@ class EezyView(APIView):
             )
             result = response.choices[0].message.content.strip()
 
-            if result.startswith("```json"):
-                result = result[7:-3].strip()
-            print(response.choices[0])
-            result_json = json.loads(result)
-            '''result_json = {"title": "test", "content": html_content, "tab":tab}'''
-            eezy = Eezy.objects.create(title=tab.title, content=result_json['content'], tab=tab)
+            # Directly use the string response
+            eezy = Eezy.objects.create(title=tab.title, content=result, tab=tab)
             serializer = EezySerializer(eezy)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
