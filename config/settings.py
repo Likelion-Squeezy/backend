@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,9 +25,7 @@ SECRET_KEY = 'django-insecure-t_dv&(qls7_fl@=)#(%qcv34y7y1=l-^ipelf*$^+9183=s5x&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-
+ALLOWED_HOSTS = ['13.124.143.64']
 
 # Application definition
 
@@ -43,7 +41,7 @@ INSTALLED_APPS = [
     'squeeze.apps.SqueezeConfig',
     'eezy.apps.EezyConfig',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +129,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = '/home/ubuntu/squeezy/static/'
+STATICFILES_DIRS = []
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
