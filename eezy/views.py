@@ -20,6 +20,14 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=openai.api_key)
 
 class EezyView(APIView):
+    
+    def get(self, request, eezy_id):
+        try:
+            eezy = Eezy.objects.get(id=eezy_id)
+            serializer = EezySerializer(eezy)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Eezy.DoesNotExist:
+            return Response({"error": "Eezy not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         user = User.objects.get(id=1)
@@ -61,3 +69,4 @@ class EezyView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
