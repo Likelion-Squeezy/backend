@@ -22,7 +22,7 @@ client = openai.OpenAI(api_key=openai.api_key)
 class EezyView(APIView):
 
     def post(self, request):
-        user = request.user
+        user = User.objects.get(id=1)
         tab_serializer = TabSerializer(data=request.data)
         html_content = request.data.get('script')
         if not html_content:
