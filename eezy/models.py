@@ -6,6 +6,7 @@ class Eezy(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE, null=True, blank=True) 
     content = models.TextField()
     tab = models.ForeignKey('tabs.Tab', on_delete=models.CASCADE, related_name='eezy')
+    created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.title
