@@ -37,13 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Local apps
     'users.apps.UsersConfig',
     'tabs.apps.TabsConfig',
     'squeeze.apps.SqueezeConfig',
     'eezy.apps.EezyConfig',
+
+    # Third-party apps
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken',  # Add this line
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
