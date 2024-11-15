@@ -24,8 +24,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/eezy/', include('eezy.urls')),
     path('api/squeeze/', include('squeeze.urls')),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     path('api/profile/', include('users.urls')),
+
+    # Auth
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
 
 if settings.DEBUG:

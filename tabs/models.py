@@ -4,6 +4,7 @@ from django.db import models
 class Tab(models.Model):
     title = models.CharField(max_length=100)
     url = models.URLField()
+    favicon = models.URLField(null=True, blank=True)
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     
     def __str__(self):
