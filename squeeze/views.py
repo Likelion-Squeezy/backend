@@ -33,7 +33,7 @@ class SqueezeView(APIView):
             serializer = SqueezeSerializer(squeeze)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Squeeze.DoesNotExist:
-            return Response({"error": "Eezy not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"mssage": "해당 id의 squeeze가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request):
         user = request.user
