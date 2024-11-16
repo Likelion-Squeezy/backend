@@ -39,17 +39,25 @@ class SqueezeView(APIView):
         user = request.user
         tabs = request.data.get('tabs')
         image = request.data.get('image')
-        if not tabs:
-            return Response({"error": "Tabs are required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        valid_tabs = []
+        for tab in tabs:
+            if not tab.get('favicon'):
+                tab['favicon'] = ''
+            if not tab['url'].startswith('http'):
+                continue
+            valid_tabs.append(tab)
+        tabs = valid_tabs
+                
         # Create a prompt for grouping similar tabs
         prompt = (
             "다음 탭들을 비슷한 주제끼리 묶어서 북마크를 생성해 주세요. "
             "각 그룹은 주제와 함께 제공되어야 합니다. "
+            "절대로 주어진 탭의 제목, url, favicon을 변경하거나 삭제하지 마세요."
             "탭 정보는 다음과 같습니다:\n\n"
         )
         for tab in tabs:
-            prompt += f"제목: {tab['title']}, URL: {tab['url']}, favicon: {tab['favicon']}\n"
+            prompt += f"제목: {tab['title']}, URL: {tab['url']}, favicon: {tab.get('favicon')}\n"
         prompt += (
             "\n출력 형식은 다음과 같은 JSON이어야 합니다:\n"
             "{\n"
@@ -85,17 +93,18 @@ class SqueezeView(APIView):
             result = json.loads(result)
             print(result)
             
+            response = {"squeeze": []}
             for group in result['response']:
                 squeeze_serializer = SqueezeSerializer(data=group, context={"user": user})
                 if squeeze_serializer.is_valid():   
                     squeeze = squeeze_serializer.save(user=user)
+                    response['squeeze'].append(squeeze_serializer.data)
                 else:
                     return Response({"message": "squeeze 생성에 문제가 생겼습니다.", "detail": squeeze_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(response, status=status.HTTP_200_OK)
 
             # Process the result to create bookmarks without favicon
         except Exception as e:
             return Response({"message": "OpenAI API 요청 과정에서 문제가 발생했습니다.", "detail":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = SqueezeSerializer(data=request.data)
-
-        return Response({"message": "test"}, status=status.HTTP_200_OK)
+        
