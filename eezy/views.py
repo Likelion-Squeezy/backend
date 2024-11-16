@@ -14,12 +14,15 @@ from .serializers import EezySerializer
 from dotenv import load_dotenv
 import os
 
+from rest_framework.permissions import IsAuthenticated
+
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 client = openai.OpenAI(api_key=openai.api_key)
 
 class EezyView(APIView):
+    permission_classes = [IsAuthenticated]
     
     def get(self, request, eezy_id):
         try:
@@ -30,11 +33,18 @@ class EezyView(APIView):
             return Response({"error": "Eezy not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
-        user = User.objects.get(id=1)
+        user = request.user
+
+        if user.eezy_count > 0:
+            user.eezy_count -= 1
+            user.save()
+        else:
+            return Response({"message": "eezy를 모두 사용했습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
         tab_serializer = TabSerializer(data=request.data)
         html_content = request.data.get('script')
         if not html_content:
-            return Response({"error": "No HTML content provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "html 코드가 없습니다."}, status=status.HTTP_400_BAD_REQUEST)
         
         # tab 인스턴스 생성
         if tab_serializer.is_valid():
@@ -42,10 +52,11 @@ class EezyView(APIView):
         else:
             return Response(tab_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
         # 입력(prompt)의 문자열 길이 제한
-        max_input_length = 5000
+        max_input_length = 3500
         if len(html_content) > max_input_length:
-            return Response({"error": f"Input length exceeds {max_input_length} characters"}, status=status.HTTP_400_BAD_REQUEST)   
+            return Response({"message": f"입력 제한 초과: {max_input_length} 글자"}, status=status.HTTP_400_BAD_REQUEST)   
 
         try:
             response = client.chat.completions.create(
@@ -59,14 +70,14 @@ class EezyView(APIView):
                         f"{html_content}\n\n"
                     )}
                 ],
-                max_tokens=700
+                max_tokens=900
             )
             result = response.choices[0].message.content.strip()
 
             # Directly use the string response
-            eezy = Eezy.objects.create(title=tab.title, content=result, tab=tab)
+            eezy = Eezy.objects.create(title=tab.title, content=result, tab=tab, user=user)
             serializer = EezySerializer(eezy)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"message": "openai api 요청 과정에서 문제가 발생했습니다."}, status=status.HTTP_400_BAD_REQUEST)
     

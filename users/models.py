@@ -5,4 +5,4 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     email = models.EmailField(("email address"), blank=True, unique=True)
     eezy_count = models.IntegerField(default=20)
-    squeezy_count = models.IntegerField(default=10)
+    squeeze_count = models.IntegerField(default=10)
