@@ -33,3 +33,30 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
 
         return sorted(history, key=lambda x: x['created_at'], reverse=True)
+    
+
+class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    email = serializers.EmailField()
+    password = serializers.CharField()
+    password_check = serializers.CharField()
+    
+    def validate(self, data):
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        password_check = data.get('password_check')
+
+        if not all([username, email, password, password_check]):
+            raise serializers.ValidationError("모든 필드를 입력해주세요.")
+        
+        if password != password_check:
+            raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
+        
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError("이미 가입한 이메일입니다.")   
+        
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError("이미 사용중인 아이디입니다.")
+        
+        return data
