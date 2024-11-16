@@ -9,8 +9,8 @@ from django.views.decorators.cache import cache_page
 from squeeze.models import Squeeze
 from eezy.models import Eezy
 from .models import User
-from .serializers import UserProfileSerializer, RegisterSerializer
-
+from .serializers import UserProfileSerializer, RegisterSerializer, LoginSerializer
+from rest_framework.authtoken.models import Token
 
 
 class UserView(APIView):
@@ -40,3 +40,13 @@ class RegisterView(APIView):
                 password=serializer.validated_data['password'],
             )
             return Response({"message": "계정 생성이 완료되었습니다.", "id": user.id}, status=status.HTTP_201_CREATED)
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = User.objects.get(email=serializer.validated_data['email'])
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
