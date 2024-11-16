@@ -60,3 +60,19 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError("이미 사용중인 아이디입니다.")
         
         return data
+    
+class LoginSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    password = serializers.CharField()
+    
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+        
+        if not all([email, password]):
+            raise serializers.ValidationError("모든 필드를 입력해주세요.")
+        
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError("가입하지 않은 이메일입니다.")
+        
+        return data
