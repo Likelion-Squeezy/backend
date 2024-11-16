@@ -25,12 +25,14 @@ class EezyView(APIView):
     permission_classes = [IsAuthenticated]
     
     def get(self, request, eezy_id):
+        if not eezy_id:
+            return Response({"message": "Eezy id를 입력해주세요."}, status=status.HTTP_400_BAD_REQUEST)
         try:
             eezy = Eezy.objects.get(id=eezy_id)
             serializer = EezySerializer(eezy)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Eezy.DoesNotExist:
-            return Response({"error": "Eezy not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "해당 eezy가 존재하지 않습니다."}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         user = request.user
