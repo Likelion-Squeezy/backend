@@ -19,6 +19,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 "type": "squeezy",
                 "id": squeeze.id,
                 "title": squeeze.title,
+                "count": squeeze.tabs.count(),
                 "created_at": squeeze.created_at,
             }
             for squeeze in squeeze_qs
@@ -27,6 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 "type": "eezy",
                 "id": eezy.id,
                 "title": eezy.title,
+                "content": eezy.content,
                 "created_at": eezy.created_at,
             }
             for eezy in eezy_qs
