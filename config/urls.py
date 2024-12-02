@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/eezy/', include('eezy.urls')),
     path('api/squeeze/', include('squeeze.urls')),
     path('api/users/', include('users.urls')),
+    path('api/tabs/', include('tabs.urls')),
 
     # Auth
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
